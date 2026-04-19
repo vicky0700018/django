@@ -30,3 +30,15 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
+
+# Student Model
+class Student(models.Model):
+    std_name = models.CharField(max_length=255)
+    std_roll = models.CharField(max_length=50)
+    std_image = models.ImageField(upload_to='students/', null=True, blank=True)
+    std_email = models.EmailField()
+    std_city = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.std_name
+
