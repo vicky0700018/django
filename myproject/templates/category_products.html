@@ -1,115 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Products by Category</title>
+{% extends 'base.html' %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-        }
+{% block title %}Products by Category | My Project{% endblock %}
 
-        h1 {
-            text-align: center;
-        }
+{% block extra_css %}
+<style>
+    .category-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #667eea;
+    }
+    
+    .product-img {
+        height: 180px;
+        object-fit: cover;
+    }
+    
+    .price-badge {
+        font-size: 1.3rem;
+        color: #28a745;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
 
-        .category {
-            margin-bottom: 50px;
-        }
+{% block content %}
+<div class="mb-5">
+    <h1 class="display-4 fw-bold mb-4">📦 Products by Category</h1>
+</div>
 
-        .category-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .category-header img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: 0.3s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .product-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .price {
-            color: green;
-            font-weight: bold;
-        }
-
-        .description {
-            font-size: 14px;
-            color: #555;
-        }
-    </style>
-</head>
-<body>
-
-<h1>Products by Category</h1>
-
-{% for category in categories %}
-<div class="category">
-
-    <div class="category-header">
-        {% if category.category_image %}
-            <img src="{{ category.category_image.url }}" alt="{{ category.category_name }}">
-        {% endif %}
-        <h2>{{ category.category_name }}</h2>
-    </div>
-
-    <!-- <div class="products">
-        {% for product in category.products.all %}
-        <div class="product-card">
-            <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
-            
-            <div class="product-name">{{ product.product_name }}</div>
-            
-            <div class="price">₹{{ product.product_price }}</div>
-            
-            <div class="description">
-                {{ product.product_description|truncatewords:10 }}
+{% if categories %}
+    {% for category in categories %}
+    <div class="mb-5">
+        <!-- Category Header -->
+        <div class="d-flex align-items-center gap-3 pb-3 mb-4 border-bottom border-primary">
+            {% if category.category_image %}
+                <img src="{{ category.category_image.url }}" alt="{{ category.category_name }}" class="category-img">
+            {% endif %}
+            <div>
+                <h2 class="h2 mb-0 text-dark fw-bold">{{ category.category_name }}</h2>
             </div>
         </div>
-        {% empty %}
-        <p>No products available in this category.</p>
-        {% endfor %}
-    </div> -->
-
+        
+        <!-- Products Grid -->
+        {% if category.products.all %}
+        <div class="row g-4">
+            {% for product in category.products.all %}
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="card h-100 shadow-sm border-0 transition">
+                    <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" class="card-img-top product-img">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark">{{ product.product_name }}</h5>
+                        <p class="card-text text-muted flex-grow-1">
+                            {{ product.product_description|truncatewords:15 }}
+                        </p>
+                        <div class="price-badge">₹{{ product.product_price }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-warning text-center py-4" role="alert">
+            <h5 class="mb-2">❌ No products available</h5>
+            <p class="mb-0">This category doesn't have any products yet.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+<div class="alert alert-warning text-center py-5" role="alert">
+    <h5 class="mb-3">❌ No categories found</h5>
+    <p class="mb-3">Add some categories and products from the Admin Panel!</p>
+    <a href="/admin" class="btn btn-primary">Go to Admin Panel</a>
 </div>
-{% endfor %}
+{% endif %}
 
-</body>
-</html>
+<style>
+    .transition {
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3) !important;
+    }
+</style>
+{% endblock %}
