@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Students List | My Project{% endblock %}
+
+{% block extra_css %}
+<style>
+    .student-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #667eea;
+    }
+    
+    .no-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e0e0e0;
+        color: #999;
+        font-size: 11px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="mb-5">
+    <h1 class="display-4 fw-bold mb-4">📚 Students List</h1>
+</div>
+
+<div class="alert alert-info py-3 mb-4" role="alert">
+    <strong>Total Students:</strong> <span class="badge bg-primary fs-6">{{ students.count }}</span>
+</div>
+
+{% if students %}
+<div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center">Image</th>
+                <th>Name</th>
+                <th>Roll Number</th>
+                <th>Email</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td class="text-center align-middle">
+                    {% if student.std_image %}
+                        <img src="{{ student.std_image.url }}" alt="{{ student.std_name }}" class="student-img">
+                    {% else %}
+                        <div class="no-img">No Image</div>
+                    {% endif %}
+                </td>
+                <td class="align-middle">
+                    <strong class="text-dark">{{ student.std_name }}</strong>
+                </td>
+                <td class="align-middle">{{ student.std_roll }}</td>
+                <td class="align-middle">{{ student.std_email }}</td>
+                <td class="align-middle">{{ student.std_city }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-warning text-center py-5" role="alert">
+    <h5 class="mb-3">❌ No students found</h5>
+    <p class="mb-3">Add some students from the Admin Panel!</p>
+    <a href="/admin" class="btn btn-primary">Go to Admin Panel</a>
+</div>
+{% endif %}
+{% endblock %}
